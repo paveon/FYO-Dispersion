@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>FYO | Light Dispersion</title>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"
+        integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.5/pixi.min.js"></script>
+    <script type="text/javascript" src="math.min.js"></script>
+    <script type="text/javascript" src="raytracing.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="css/skeleton.css"> -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaina+2&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <style>
+        body {
+            padding: 0px;
+            margin: 0px;
+            background: #fff;
+            color: #222;
+            /* font-family: 'Roboto', sans-serif; */
+            font-family: 'Baloo Bhaina 2', cursive;
+
+        }
+
+        #rayform input {
+            width: 70px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            /* font-family: 'Roboto', sans-serif; */
+            font-family: 'Baloo Bhaina 2', cursive;
+            text-align: center;
+        }
+
+        h3 {
+            margin-top: 0px;
+        }
+
+        label {
+            display: inline-block;
+        }
+
+        .full-width-container {
+            width: 100%;
+            max-width: 100%;
+            clear: both;
+            margin: 0px auto;
+            padding-left: 0px;
+        }
+
+        #canvas-container {
+            height: 500px;
+            /*  */
+            /* width: 100%;
+            max-width: 100%;
+            clear: both;
+            margin: 0px auto;
+            padding-left: 0; */
+        }
+
+        #settings-container {
+            margin-top: 10px;
+            padding-left: 30px;
+            padding-right: 30px;
+            /*  */
+            /* width: 100%;
+            max-width: 100%;
+            clear: both;
+            margin: 0px auto;
+            padding-left: 0; */
+        }
+
+        #settings-canvas-container {
+            height: 200px;
+            border: 2px solid gray;
+            width: auto;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        #footnote-container {
+            margin-top: 25px;
+        }
+
+        .flex-container {
+            /* position: relative; */
+            display: flex;
+            flex-flow: column wrap;
+        }
+
+        #geometry-settings {
+            padding-right: 10px;
+        }
+
+        #ray-settings {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        #general-settings {
+            padding-left: 10px;
+        }
+    </style>
+    <!--<script type="text/javascript" src="advanced-graphics.js"></script>-->
+
+
+    <div id="canvas-container"></div>
+
+    <div class="w3-border-bottom">
+        <h1>Light Dispersion</h1>
+    </div>
+
+    <!-- style="flex: 1 1 auto;" -->
+    <div id="settings-container" class="flex-container" style="flex-flow: row nowrap;">
+        <div id="geometry-settings" style="flex: 1 1 0;">
+            <h3 id=geometryType>Dispersion curve: environment</h3>
+            <div id="settings-canvas-container"></div>
+            <div style="margin-bottom: 10px;">
+                <label style="margin-right: 10px;" for="380nm">380nm:</label>
+                <input type="number" id="380nm" name="380nm" min="1" max="2.5" step="0.1" style="margin-right: 10px;"
+                    class="wavelength">
+
+                <label style="margin-right: 10px;" for="400nm">400nm:</label>
+                <input type="number" id="400nm" name="400nm" min="1" max="2.5" step="0.1" class="wavelength">
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label style="margin-right: 10px;" for="500nm">500nm:</label>
+                <input type="number" id="500nm" name="500nm" min="1" max="2.5" step="0.1" style="margin-right: 10px;"
+                    class="wavelength">
+
+                <label style="margin-right: 10px;" for="600nm">600nm:</label>
+                <input type="number" id="600nm" name="600nm" min="1" max="2.5" step="0.1" class="wavelength">
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label style="margin-right: 10px;" for="700nm">700nm:</label>
+                <input type="number" id="700nm" name="700nm" min="1" max="2.5" step="0.1" style="margin-right: 10px;"
+                    class="wavelength">
+
+                <label style="margin-right: 13px;" for="740nm">740nm:</label>
+                <input type="number" id="740nm" name="740nm" min="1" max="2.5" step="0.1" class="wavelength">
+            </div>
+            <div style="display:flex; flex-direction:row; align-items: center">
+                <label style="margin-right: 10px; margin-bottom: 0;" for="multiplier">Multiplier:</label>
+                <input type="number" id="multiplier" name="multiplier" min="1" max="5" step="0.1"
+                    style="flex:1; max-width: 225px;" value="1">
+            </div>
+
+            <!-- <b>Templates:</b>
+            <select id="templateSelector" onchange="handleInputEvent()">
+                <option value="sphericalAberration">Spherical aberration</option>
+                <option value="chromaticAberration">Chromatic aberration</option>
+                <option value="coma">Coma</option>
+                <option value="petzvald">Petzvald field curvature</option>
+            </select>
+            <br>
+            <b>Parameters of the lens</b><br>
+            Index of refraction <input type="number" id="refraction" min="1" max="2" step="0.01"><br>
+            Front radius<input type="number" id="radiusr1" min="1" max="20" step="0.1">cm<br>
+            X position R1<input type="number" id="position1" min="1" max="20" step="0.1">cm<br>
+            Back radius <input type="number" id="radiusr2" min="0" max="10" step="0.1">cm<br>
+            X position R2<input type="number" id="position2" min="-5" max="20" step="0.1">cm<br> -->
+        </div>
+
+        <div id="ray-settings" style="flex: 1 1 0;">
+            <h3 id=geometryType>Ray Settings</h3>
+
+            <div style="margin-bottom: 10px;">
+                <label style="margin-right: 10px;" for="ray-angle">Ray angle:</label>
+                <input type="number" id="ray-angle" name="ray-angle" min="-180" max="180" step="15">
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <label style="margin-right: 10px;" for="monochromatic">Monochromatic light</label>
+                <input type="checkbox" id="monochromatic" name="monochromatic">
+            </div>
+
+            <div id="monochromatic-div">
+                <div style="margin-bottom: 10px;">
+                    <label style="margin-right: 10px;" for="light-wavelength">Wavelength:</label>
+                    <input type="number" id="light-wavelength" name="light-wavelength" min="380" max="740" step="50"
+                        style="margin-right: 10px;">
+                </div>
+            </div>
+            <div id="chromatic-div">
+                <div style="margin-bottom: 10px;">
+                    <label style="margin-right: 10px;" for="ray-count">Number of rays:</label>
+                    <input type="number" id="ray-count" name="ray-count" min="2" max="25" step="1">
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <label style="margin-right: 10px;" for="wavelength-min">Min nm:</label>
+                    <input type="number" id="wavelength-min" name="wavelength-min" min="380" max="740" step="50"
+                        style="margin-right: 10px;">
+
+                    <label style="margin-right: 10px;" for="wavelength-max">Max nm:</label>
+                    <input type="number" id="wavelength-max" name="wavelength-max" min="380" max="740" step="50">
+                </div>
+            </div>
+        </div>
+
+        <div id="general-settings" style="flex: 1 1 0;">
+            <div id="rectangle-div">
+                <div style="margin-bottom: 10px;">
+                    <label style="margin-right: 10px;" for="rect-width">Width:</label>
+                    <input type="number" id="rect-width" name="rect-width" min="50" max="300" step="50"
+                        style="margin-right: 10px;">
+
+                    <label style="margin-right: 10px;" for="rect-height">Height:</label>
+                    <input type="number" id="rect-height" name="rect-height" min="50" max="300" step="50">
+                </div>
+            </div>
+
+            <div id="triangle-div">
+                <div style="margin-bottom: 10px;">
+                    <label style="margin-right: 10px;" for="triangle-angle">Angle:</label>
+                    <input type="number" id="triangle-angle" name="triangle-angle" min="15" max="90" step="15"
+                        style="margin-right: 10px;">
+
+                    <label style="margin-right: 10px;" for="triangle-height">Height:</label>
+                    <input type="number" id="triangle-height" name="triangle-height" min="50" max="300" step="50">
+                </div>
+            </div>
+
+            <!-- <input type="checkbox" id="isChromaticModeOn"> Toggle chromatic waves<br>
+            <input type="checkbox" id="shouldBeSource"> Toggle point/plane source of rays <br>
+            <b>Help</b>: <br>
+            <input type="checkbox" id="markSphericalAberration"> Mark spherical aberration <br>
+            <input type="checkbox" id="showLens"> Mark lens shape<br>
+            <input type="checkbox" id="showOpticalAxis"> Toggle optical axis drawing<br>
+            <input type="checkbox" id="fullscreen"> Toggle fullscreen<br>
+            <b>A</b>- toggle optical axis marker<br>
+            <b>F</b>- toggle fullscreen <br>
+            <b>C</b>- toggle mono/chromatic rays <br>
+            <b>P</b>- toggle point/omnidirectional rays <br>
+            <b>L</b>- toggle len's border <br>
+            <b>M</b>- toggle spherical aberration <br>
+            <input type="button" id="dumpConfig" value="Show"> -->
+        </div>
+    </div>
+
+
+    <div class="container" id="footnote-container">
+        This aim of this website is to <i>demonstrate the most common lens aberrations</i>.
+        In general, <b>aberration</b> is an departure from the ideal model. In terms of lens,
+        aberrations cause rays to focus in multiple points instead of a single one (<b>spherical and
+            chromatic aberration</b>) or deformation of the image.
+        The simulation shown in the canvas is based on <b>2D raytracing</b>, thus simulating the
+        path of a ray as it pass through the lens.
+    </div>
+</body>
+
+</html>
