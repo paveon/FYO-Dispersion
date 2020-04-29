@@ -8,8 +8,9 @@
         integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.5/pixi.min.js"></script>
     <script type="text/javascript" src="math.min.js"></script>
+    <script type="text/javascript" src="set_operations.js"></script>
     <script type="text/javascript" src="raytracing.js"></script>
-    <!-- <link rel="stylesheet" type="text/css" href="css/skeleton.css"> -->
+
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaina+2&display=swap" rel="stylesheet">
@@ -28,20 +29,16 @@
 
         }
 
-        #rayform input {
-            width: 70px;
-        }
-
         h1,
         h2,
         h3 {
-            /* font-family: 'Roboto', sans-serif; */
             font-family: 'Baloo Bhaina 2', cursive;
             text-align: center;
         }
 
         h3 {
-            margin-top: 0px;
+            margin-top: 0;
+            margin-bottom: 0;
         }
 
         label {
@@ -79,7 +76,7 @@
         }
 
         #settings-canvas-container {
-            height: 200px;
+            height: 170px;
             border: 2px solid gray;
             width: auto;
             min-width: 0;
@@ -89,7 +86,13 @@
         }
 
         #footnote-container {
-            margin-top: 25px;
+            width: 75%;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        p {
+            text-align: justify;
         }
 
         .flex-container {
@@ -110,126 +113,237 @@
         #general-settings {
             padding-left: 10px;
         }
-    </style>
-    <!--<script type="text/javascript" src="advanced-graphics.js"></script>-->
 
+        input[type=number] {
+            padding: 8px 5px 4px 10px;
+            margin: 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            min-width: 120px;
+        }
+
+        select {
+            width: 100%;
+            padding: 3px 10px;
+            margin-bottom: 10px;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+
+        input[type=number]:focus {
+            border-color: lightblue;
+        }
+
+        input[type=number]:hover {
+            border: 2px solid lightblue;
+            padding: 7px 5px 3px 9px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+
+
+        .create-button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 4px 20px;
+            margin: 2px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .create-button:hover {
+            background-color: #45a049;
+        }
+
+        .red {
+            background-color: #f44336;
+        }
+
+        .red:hover {
+            background-color: #e63b2f;
+        }
+
+        .orange {
+            background-color: #f18034;
+        }
+
+        .orange:hover {
+            background-color: #e63b2f;
+        }
+
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-gap: 0.6em 1em;
+            grid-auto-flow: dense;
+            align-items: center;
+            /* padding: 10px; */
+        }
+
+        .grid-item {
+            /* padding: 20px; */
+        }
+
+        .wavelength-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-gap: 0.6em 1em;
+            grid-auto-flow: dense;
+            align-items: center;
+            /* padding: 10px; */
+        }
+
+        .geometry-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 1fr;
+            grid-gap: 0.6em 1em;
+            grid-auto-flow: dense;
+            align-items: center;
+            /* padding: 10px; */
+        }
+    </style>
 
     <div id="canvas-container"></div>
 
     <div class="w3-border-bottom">
-        <h1>Light Dispersion</h1>
+        <h2 style="margin: 0;">Light Dispersion</h2>
     </div>
 
-    <!-- style="flex: 1 1 auto;" -->
     <div id="settings-container" class="flex-container" style="flex-flow: row nowrap;">
         <div id="geometry-settings" style="flex: 1 1 0;">
             <h3 id=geometryType>Dispersion curve: environment</h3>
             <div id="settings-canvas-container"></div>
-            <div style="margin-bottom: 10px;">
-                <label style="margin-right: 10px;" for="380nm">380nm:</label>
-                <input type="number" id="380nm" name="380nm" min="1" max="2.5" step="0.1" style="margin-right: 10px;"
-                    class="wavelength">
 
-                <label style="margin-right: 10px;" for="400nm">400nm:</label>
-                <input type="number" id="400nm" name="400nm" min="1" max="2.5" step="0.1" class="wavelength">
-            </div>
-            <div style="margin-bottom: 10px;">
-                <label style="margin-right: 10px;" for="500nm">500nm:</label>
-                <input type="number" id="500nm" name="500nm" min="1" max="2.5" step="0.1" style="margin-right: 10px;"
-                    class="wavelength">
-
-                <label style="margin-right: 10px;" for="600nm">600nm:</label>
-                <input type="number" id="600nm" name="600nm" min="1" max="2.5" step="0.1" class="wavelength">
-            </div>
-            <div style="margin-bottom: 10px;">
-                <label style="margin-right: 10px;" for="700nm">700nm:</label>
-                <input type="number" id="700nm" name="700nm" min="1" max="2.5" step="0.1" style="margin-right: 10px;"
-                    class="wavelength">
-
-                <label style="margin-right: 13px;" for="740nm">740nm:</label>
-                <input type="number" id="740nm" name="740nm" min="1" max="2.5" step="0.1" class="wavelength">
-            </div>
-            <div style="display:flex; flex-direction:row; align-items: center">
-                <label style="margin-right: 10px; margin-bottom: 0;" for="multiplier">Multiplier:</label>
-                <input type="number" id="multiplier" name="multiplier" min="1" max="5" step="0.1"
-                    style="flex:1; max-width: 225px;" value="1">
-            </div>
-
-            <!-- <b>Templates:</b>
-            <select id="templateSelector" onchange="handleInputEvent()">
-                <option value="sphericalAberration">Spherical aberration</option>
-                <option value="chromaticAberration">Chromatic aberration</option>
-                <option value="coma">Coma</option>
-                <option value="petzvald">Petzvald field curvature</option>
+            <select id="curve-selection" name="option">
+                <option value="custom" selected>Custom dispersion curve</option>
+                <option value="FK51A">Fluorite crown FK51A</option>
+                <option value="SF10">Dense flint SF10</option>
+                <option value="BK7">Borosilicate BK7</option>
+                <option value="LASF9">Lanthanum dense flint LaSF9</option>
+                <option value="water">Water</option>
+                <option value="ice">Ice</option>
             </select>
-            <br>
-            <b>Parameters of the lens</b><br>
-            Index of refraction <input type="number" id="refraction" min="1" max="2" step="0.01"><br>
-            Front radius<input type="number" id="radiusr1" min="1" max="20" step="0.1">cm<br>
-            X position R1<input type="number" id="position1" min="1" max="20" step="0.1">cm<br>
-            Back radius <input type="number" id="radiusr2" min="0" max="10" step="0.1">cm<br>
-            X position R2<input type="number" id="position2" min="-5" max="20" step="0.1">cm<br> -->
+
+            <div class="wavelength-grid">
+                <label class="wavelength-item" for="380nm">380nm:</label>
+                <input class="wavelength wavelength-item" type="number" id="380nm" name="380nm" min="1" max="2.5"
+                    step="0.1">
+
+                <label class="wavelength-item" for="400nm">400nm:</label>
+                <input class="wavelength wavelength-item" type="number" id="400nm" name="400nm" min="1" max="2.5"
+                    step="0.1">
+
+                <label class="wavelength-item" for="500nm">500nm:</label>
+                <input class="wavelength wavelength-item" type="number" id="500nm" name="500nm" min="1" max="2.5"
+                    step="0.1">
+
+                <label class="wavelength-item" for="600nm">600nm:</label>
+                <input class="wavelength wavelength-item" type="number" id="600nm" name="600nm" min="1" max="2.5"
+                    step="0.1">
+
+                <label class="wavelength-item" for="700nm">700nm:</label>
+                <input class="wavelength wavelength-item" type="number" id="700nm" name="700nm" min="1" max="2.5"
+                    step="0.1">
+
+                <label class="wavelength-item" for="740nm">740nm:</label>
+                <input class="wavelength wavelength-item" type="number" id="740nm" name="740nm" min="1" max="2.5"
+                    step="0.1">
+
+                <label class="wavelength-item" for="multiplier">Multiplier:</label>
+                <input class="wavelength-item" type="number" id="multiplier" name="multiplier" min="1" max="5"
+                    step="0.1" value="1">
+            </div>
         </div>
 
         <div id="ray-settings" style="flex: 1 1 0;">
             <h3 id=geometryType>Ray Settings</h3>
 
-            <div style="margin-bottom: 10px;">
-                <label style="margin-right: 10px;" for="ray-angle">Ray angle:</label>
-                <input type="number" id="ray-angle" name="ray-angle" min="-180" max="180" step="15">
-            </div>
+            <input type="button" id="create-ray" value="New ray" class="create-button">
 
-            <div style="margin-bottom: 10px;">
-                <label style="margin-right: 10px;" for="monochromatic">Monochromatic light</label>
-                <input type="checkbox" id="monochromatic" name="monochromatic">
-            </div>
+            <div id="ray-inputs">
+                <input type="button" id="delete-ray" value="Delete ray" class="create-button red"
+                    style="margin-bottom: 10px;">
 
-            <div id="monochromatic-div">
-                <div style="margin-bottom: 10px;">
-                    <label style="margin-right: 10px;" for="light-wavelength">Wavelength:</label>
-                    <input type="number" id="light-wavelength" name="light-wavelength" min="380" max="740" step="50"
-                        style="margin-right: 10px;">
-                </div>
-            </div>
-            <div id="chromatic-div">
-                <div style="margin-bottom: 10px;">
-                    <label style="margin-right: 10px;" for="ray-count">Number of rays:</label>
-                    <input type="number" id="ray-count" name="ray-count" min="2" max="25" step="1">
-                </div>
+                <div class="grid-container">
+                    <label class="grid-item" for="monochromatic">Monochromatic light</label>
+                    <input class="grid-item" type="checkbox" id="monochromatic" name="monochromatic">
 
-                <div style="margin-bottom: 10px;">
-                    <label style="margin-right: 10px;" for="wavelength-min">Min nm:</label>
-                    <input type="number" id="wavelength-min" name="wavelength-min" min="380" max="740" step="50"
-                        style="margin-right: 10px;">
+                    <label class="grid-item" for="ray-angle">Ray angle (degrees):</label>
+                    <input class="grid-item" type="number" id="ray-angle" name="ray-angle" min="-180" max="180"
+                        step="15">
 
-                    <label style="margin-right: 10px;" for="wavelength-max">Max nm:</label>
-                    <input type="number" id="wavelength-max" name="wavelength-max" min="380" max="740" step="50">
+                    <label class="grid-item" for="ray-wavelength">Ray wavelength (nm):</label>
+                    <input class="grid-item" type="number" id="ray-wavelength" name="ray-wavelength" min="380" max="740"
+                        step="50">
+
+                    <label class="grid-item" for="ray-count">Number of rays:</label>
+                    <input class="grid-item" type="number" id="ray-count" name="ray-count" min="2" max="25" step="1">
+
+                    <label class="grid-item" for="wavelength-min">Minimum wavelength (nm):</label>
+                    <input class="grid-item" type="number" id="wavelength-min" name="wavelength-min" min="380" max="740"
+                        step="50">
+
+                    <label class="grid-item" for="wavelength-max">Maximum wavelength (nm):</label>
+                    <div class="unit-wrapper nm">
+                        <input class="grid-item" type="number" id="wavelength-max" name="wavelength-max" min="380"
+                            max="740" step="50">
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="general-settings" style="flex: 1 1 0;">
-            <div id="rectangle-div">
-                <div style="margin-bottom: 10px;">
-                    <label style="margin-right: 10px;" for="rect-width">Width:</label>
-                    <input type="number" id="rect-width" name="rect-width" min="50" max="300" step="50"
-                        style="margin-right: 10px;">
+            <h3 id=geometryType>Geometry Settings</h3>
 
-                    <label style="margin-right: 10px;" for="rect-height">Height:</label>
-                    <input type="number" id="rect-height" name="rect-height" min="50" max="300" step="50">
+            <div id="create-div">
+                <input type="button" id="triangle" value="New triangle" class="create-button">
+                <input type="button" id="rectangle" value="New rectangle" class="create-button">
+            </div>
+
+            <div id="selected-div">
+                <input type="button" id="copy-geometry" value="Copy geometry" class="create-button orange">
+                <input type="button" id="delete-geometry" value="Delete geometry" class="create-button red"
+                    style="margin-bottom: 10px;">
+
+                <div id="rectangle-div" class="geometry-grid" style="margin-bottom: 10px;">
+                    <label class="grid-item" for="rect-width">Width (mm):</label>
+                    <input class="grid-item" type="number" id="rect-width" name="rect-width" min="50" max="300"
+                        step="50">
+
+                    <label class="grid-item" for="rect-height">Height (mm):</label>
+                    <input class="grid-item" type="number" id="rect-height" name="rect-height" min="50" max="300"
+                        step="50">
+                </div>
+
+                <div id="triangle-div" class="geometry-grid" style="margin-bottom: 10px;">
+                    <label class="grid-item" for="triangle-angle">Angle (degrees):</label>
+                    <input class="grid-item" type="number" id="triangle-angle" name="triangle-angle" min="15" max="120"
+                        step="15">
+
+                    <label class="grid-item" for="triangle-height">Height (mm):</label>
+                    <input class="grid-item" type="number" id="triangle-height" name="triangle-height" min="50"
+                        max="300" step="50">
+                </div>
+
+                <div id="rotate-div" class="geometry-grid">
+                    <label class="grid-item" for="geometry-rotation">Rotation (degrees):</label>
+                    <input class="grid-item" type="number" id="geometry-rotation" name="geometry-rotation" min="-180"
+                        max="180" step="15">
                 </div>
             </div>
 
-            <div id="triangle-div">
-                <div style="margin-bottom: 10px;">
-                    <label style="margin-right: 10px;" for="triangle-angle">Angle:</label>
-                    <input type="number" id="triangle-angle" name="triangle-angle" min="15" max="90" step="15"
-                        style="margin-right: 10px;">
 
-                    <label style="margin-right: 10px;" for="triangle-height">Height:</label>
-                    <input type="number" id="triangle-height" name="triangle-height" min="50" max="300" step="50">
-                </div>
-            </div>
 
             <!-- <input type="checkbox" id="isChromaticModeOn"> Toggle chromatic waves<br>
             <input type="checkbox" id="shouldBeSource"> Toggle point/plane source of rays <br>
@@ -248,14 +362,23 @@
         </div>
     </div>
 
-
     <div class="container" id="footnote-container">
-        This aim of this website is to <i>demonstrate the most common lens aberrations</i>.
-        In general, <b>aberration</b> is an departure from the ideal model. In terms of lens,
-        aberrations cause rays to focus in multiple points instead of a single one (<b>spherical and
-            chromatic aberration</b>) or deformation of the image.
-        The simulation shown in the canvas is based on <b>2D raytracing</b>, thus simulating the
-        path of a ray as it pass through the lens.
+        <p>
+            This is a JavaScript demonstration program
+            for simulation of light dispersion in ray optics.
+            The canvas simulation is based on <b>2D raytracing</b> algorithm
+            which traces the path of each ray as it passes through
+            various optical apertures (optical prisms in this case).
+        </p>
+
+        <p>
+            The GUI allows for parameter changes either via input
+            boxes or directly through main (raytraced) and secondary
+            canvas (dispersion curve). It is possible to
+            <b>drag-and-drop</b> each geometry in canvas and rotate
+            each ray with <b>left</b> click.
+            Selection is performed with <b>right</b> click.
+        </p>
     </div>
 </body>
 
