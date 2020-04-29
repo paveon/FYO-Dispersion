@@ -11,7 +11,7 @@ of light in ray optics via 2D raytracing algorithm
 on HTML canvas.
 
 ## Dependencies
-* **[jQuery 3.5.0](http://github.com)**
+* **[jQuery 3.5.0](https://jquery.com/)**
 * **[PixiJS 5.1.5](https://www.pixijs.com/)** - WebGL 2D renderer used for all canvas drawing
 * **[MathJS](https://mathjs.org/)** - math library used for vector calculations
 
