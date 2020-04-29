@@ -914,7 +914,7 @@ function selectRay(ray) {
 
 let settings = {
     "refraction": 1.5,
-    "debugOn": true,
+    "debugOn": false,
     "multiplier": 1.0,
     "multiplier-min": 1.0,
     "multiplier-max": 3.0,
